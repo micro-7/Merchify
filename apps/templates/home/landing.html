@@ -1,0 +1,273 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block stylesheets %}
+<style>
+  .carousel-caption {
+    color: black;
+  }
+
+  .landing-title {
+    text-align: center;
+    font-size: 5rem;
+    padding-top: 130px;
+    color: white;
+  }
+
+  .landing-descp {
+    text-align: center;
+    font-size: 1.5rem;
+    padding: 5px;
+    color: white;
+  }
+
+  .containerr {
+    height: 550px;
+    background-image: url("/static/assets/images/landing/landingbck.png");
+
+  }
+
+  .sc-button {
+    padding: 20px;
+    background-color: purple;
+    border-radius: 10px;
+    color: white;
+  }
+
+  .first {
+    background-color: rgb(220, 226, 231);
+  }
+
+  .block-2 {
+    margin: 50px;
+  }
+
+  .row-first {
+    height: 450px;
+  }
+
+  .d-title {
+    font-size: 4rem;
+    font-weight: 500;
+    padding-top: 150px;
+    padding-left: 30px;
+  }
+
+  .dis-button {
+    margin-top: 20px;
+    margin-left: 30px;
+    height: 40px;
+    border-radius: 5px;
+    width: 100px;
+    background-color: hotpink;
+  }
+
+  .row-second {
+    padding: 50px;
+    margin: 0.5px;
+    background-color: #0b0a24;
+    color: white;
+  }
+
+  .card-title {
+    text-align: center;
+  }
+
+  a {
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+  }
+
+  a:hover {
+    color: rgb(0, 0, 0);
+  }
+
+  .rs-head {
+    padding-top: 10px;
+    margin-left: 130px;
+    position: absolute;
+  }
+
+  .rs-btn {
+    position: relative;
+    margin-left: 740px;
+
+  }
+
+  .custom-btn-3 {
+    width: 130px;
+    height: 40px;
+    color: #fff;
+    border-radius: 5px;
+    padding: 10px 25px;
+    font-family: 'Lato', sans-serif;
+    font-weight: 500;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    display: inline-block;
+    box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, .5),
+      7px 7px 20px 0px rgba(0, 0, 0, .1),
+      4px 4px 5px 0px rgba(0, 0, 0, .1);
+    outline: none;
+  }
+
+  .btn-3 {
+    background: rgb(0, 172, 238);
+    background: linear-gradient(0deg, rgba(0, 172, 238, 1) 0%, rgba(2, 126, 251, 1) 100%);
+    width: 130px;
+    height: 40px;
+    line-height: 42px;
+    padding: 0;
+    border: none;
+
+  }
+
+  .btn-3 span {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .btn-3:before,
+  .btn-3:after {
+    position: absolute;
+    content: "";
+    right: 0;
+    top: 0;
+    background: rgba(2, 126, 251, 1);
+    transition: all 0.3s ease;
+  }
+
+  .btn-3:before {
+    height: 0%;
+    width: 2px;
+  }
+
+  .btn-3:after {
+    width: 0%;
+    height: 2px;
+  }
+
+  .btn-3:hover {
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .btn-3:hover:before {
+    height: 100%;
+  }
+
+  .btn-3:hover:after {
+    width: 100%;
+  }
+
+  .btn-3 span:hover {
+    color: rgba(2, 126, 251, 1);
+  }
+
+  .btn-3 span:before,
+  .btn-3 span:after {
+    position: absolute;
+    content: "";
+    left: 0;
+    bottom: 0;
+    background: rgba(2, 126, 251, 1);
+    transition: all 0.3s ease;
+  }
+
+  .btn-3 span:before {
+    width: 2px;
+    height: 0%;
+  }
+
+  .btn-3 span:after {
+    width: 0%;
+    height: 2px;
+  }
+
+  .btn-3 span:hover:before {
+    height: 100%;
+  }
+
+  .btn-3 span:hover:after {
+    width: 100%;
+  }
+</style>
+{% endblock stylesheets %}
+
+
+{% block content %}
+
+<div class="containerr">
+  <h3 class="landing-title">Brandy</h3>
+  <p class="landing-descp">A simple solution for creating and selling products that engage</p>
+  <p class="landing-descp"> your fans and help you monetize your content.</p>
+  <p class="landing-descp">No cost, no hassle, no risk.</p>
+</div>
+
+<div class="block-2 first">
+  <div class="row row-first">
+    <div class="col-lg-6">
+      <h2 class="d-title">Discover Creators and their products</h2>
+
+      <a href="{% url 'dashboard' %}"><button class="dis-button">Discover</button></a>
+    </div>
+    <div class="col-lg-6">
+      <img class="img-fluid" src="/static/assets/images/landing/landingprod.png" alt="">
+    </div>
+  </div>
+  <div class="row row-second">
+    <h4 class="rs-head">Want to create and sell your own products? Get started on BrandY</h4>
+    <a href="{% url 'branding' %}"><button class="rs-btn btn-3 custom-btn-3">Start Creating</button></a>
+  </div>
+</div>
+
+<div class="container">
+  <h3>Categories</h3>
+  <a href="{% url 'categories' %}">more</a>
+  <div class="row">
+    {% for item in cate %}
+    <div class="col-lg-3 col-md-6 col-sl-12">
+      <a href="{% url 'product_by_category' item.id %}">
+      <div class="card card2" style="width: 18rem;">
+        <img src="{{item.logo.url}}" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">{{item.name}}</h5>
+        </div>
+      </div>
+      </a>
+    </div>
+    {% empty %}
+    <div class="alert alert-warning text-center" role="alert">
+      <h4 class="alert-heading">No Nft found!</h4>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="container">
+  <h3>Trending</h3>
+  <div class="row">
+    {% for item in product %}
+    <div class="col-lg-3 col-md-6 col-sl-12">
+      <a href="{% url 'product' item.id %}">
+        <div class="card card2" style="width: 18rem;">
+          <img src="{{item.image.url}}" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">{{item.name}}</h5>
+            <h5>Price: {{item.price}}</h5>
+          </div>
+        </div>
+      </a>
+    </div>
+    {% empty %}
+    <div class="alert alert-warning text-center" role="alert">
+      <h4 class="alert-heading">No Nft found!</h4>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,84 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block stylesheets %}
+<style>
+    .col-lg-8 {
+        height: 200px;
+        border-radius: 10px;
+        margin-top: 20px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .dash-head {
+        padding-top: 30px;
+        padding-bottom: 20px;
+        text-align: center;
+        color: white;
+        text-transform: uppercase;
+    }
+    .logo-back{
+        background-image: url("/static/assets/images/mylogos.jpg"); 
+        background-position: center;
+        background-repeat: no-repeat;
+        background-color: rgb(255, 255, 255);
+        background-size: contain;
+    
+    }
+    .contain{
+        background-image: url('/static/assets/images/landing/landingbck.png');
+    }
+    .integrate-s {
+        background-image: url("/static/assets/images/integration_overview.png");
+        background-position: center;
+        background-repeat: no-repeat;
+        text-align: center;
+        background-color: rgb(137, 43, 226);
+        
+    }
+    a{
+        text-decoration: none;
+        color: black;
+    }
+    a:hover{
+        color: black;
+    }
+    .products{
+        background-image: url("/static/assets/images/products.jpg");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    .purchases{
+        background-image: url("/static/assets/images/purchases.jpg");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="contain">
+    <h2 class="dash-head">WELCOME TO YOUR DASHBOARD {{user.username}}</h2>
+    <div class="row">
+        <div class="col-lg-8 logo-back">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{form|crispy}}
+                <button class="btn btn-primary">Upload Logo</button>
+            </form>
+            <br>
+            <a href="{% url 'logos' %}"><button class="btn btn-primary">View Logos</button></a>
+
+        
+        </div>
+        <a href="{% url 'branding' %}"><div class="col-lg-8 integrate-s"></div></a>
+        <a href="{% url 'myproducts' %}"><div class="col-lg-8 products"></div></a>
+        <a href="#"><div class="col-lg-8 purchases"></div></a>
+    </div>
+</div>
+{% endblock content %}

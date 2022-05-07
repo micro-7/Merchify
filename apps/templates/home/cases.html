@@ -1,0 +1,43 @@
+{% extends "layouts/base.html" %}
+
+
+{% block stylesheets %}
+    <style>
+      .mobile-head{
+        padding-top: 30px;
+        padding-bottom: 20px;
+      }
+    </style>
+
+{% endblock stylesheets %}
+    
+
+{% block content %}
+
+<div class="container-fluid">
+  <h2 class="mobile-head">Mobile Cases</h2>
+  <div class="row">
+  
+      <div class="col-lg-3">
+        <div class="card" style="width: 18rem;">
+          <img src="/static/assets/images/landing/560.jpg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+          </div>
+        </div>
+      </div>  
+
+
+      <div class="col-lg-3">
+        <div class="card" style="width: 18rem;">
+          <img src="/static/assets/images/landing/560.jpg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+          </div>
+        </div>
+      </div>  
+
+  </div>
+</div>
+{% endblock content %}
+    

@@ -1,0 +1,182 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block title %} Dashboard {% endblock %} 
+
+<!-- Specific CSS Plugins goes HERE  -->
+{% block css_plugins %}
+
+
+
+{% endblock css_plugins %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="container-fluid vh-100 ">
+  <div class="row"  >
+    <div class="col-md-3 p-3">
+      <h1 class="p-2 lead">
+        Select a Product
+      </h1>
+      <hr>
+      <div class="mb-3">
+        <label for="product" class="form-label">Product for Branding</label>
+        <select name="product" id="product" class="form-select" >
+          
+          {% for prod in products %}
+          <option value="{{prod.image.url}}::{{prod.id}}">{{prod.name}}</option>
+          {% empty %}
+          <div class="bg-danger">No products found</div>    
+          {% endfor %}
+          
+        </select>
+      </div>
+      <button class="btn btn-danger mb-3" onclick="clearProducts()">Clear Screen</button>
+      <button class="btn btn-success mb-3" onclick="saveDesign()">Save Design</button>
+      <hr>
+      <div class="row">
+        <div class="col-12">
+          <h3 class="p-2 lead">
+            Select branding logo
+          </h3>
+        </div>
+        {% for logo in logos %}
+        <div class="col-md-6 col-sm-3 mb-3">
+          <img src="{{logo.image.url}}" alt="{{logo.image.url}}" class="img-fluid img-thumbnail" onclick="addLogo(this)">
+        </div>
+        {% empty %}
+        
+        {% endfor %}
+        
+      </div>
+    </div>
+    <div class="col-md-9">
+      <canvas id="myCanvas" width="1100" height="720" style="border:1px solid #ccc"></canvas>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block js_plugins %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="\static\assets\js\fabric.min.js"></script>
+
+{% endblock js_plugins %}
+
+{% block javascripts %}
+<script>
+  let canvas = new fabric.Canvas ('myCanvas');
+  var deleteIcon = "data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3Csvg version='1.1' id='Ebene_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='595.275px' height='595.275px' viewBox='200 215 230 470' xml:space='preserve'%3E%3Ccircle style='fill:%23F44336;' cx='299.76' cy='439.067' r='218.516'/%3E%3Cg%3E%3Crect x='267.162' y='307.978' transform='matrix(0.7071 -0.7071 0.7071 0.7071 -222.6202 340.6915)' style='fill:white;' width='65.545' height='262.18'/%3E%3Crect x='266.988' y='308.153' transform='matrix(0.7071 0.7071 -0.7071 0.7071 398.3889 -83.3116)' style='fill:white;' width='65.544' height='262.179'/%3E%3C/g%3E%3C/svg%3E";  
+  var img = document.createElement('img');
+  let base_url = "http://127.0.0.1:8000"
+  let pro_id = null;
+  img.src = deleteIcon;
+  fabric.Object.prototype.transparentCorners = false;
+  fabric.Object.prototype.cornerStyle = 'circle';
+  canvas.on('mouse:wheel', function(opt) {
+    var delta = opt.e.deltaY;
+    var zoom = canvas.getZoom();
+    zoom *= 0.999 ** delta;
+    if (zoom > 20) zoom = 20;
+    if (zoom < 0.01) zoom = 0.01;
+    canvas.setZoom(zoom);
+    opt.e.preventDefault();
+    opt.e.stopPropagation();
+})
+  
+  function updateProduct(product_url) {
+    url  = product_url.split('::')[0]
+    pro_id  = product_url.split('::')[1]
+    console.log(url)
+    console.log(pro_id)
+    fabric.Image.fromURL(url, function(oImg) {
+        oImg.set({
+          left:250,
+          top:100,
+
+        })
+        canvas.add(oImg);
+        canvas.setActiveObject(oImg);
+  
+      });
+  }
+
+  function clearProducts(){
+    canvas.clear();
+  }
+
+  function addLogo(img){
+    let logo_url = base_url + $(img).attr('src')
+    fabric.Image.fromURL(logo_url, function(oImg) {
+        oImg.set({
+          left:250,
+          top:100,
+
+        })
+        canvas.add(oImg);
+        canvas.setActiveObject(oImg);
+  
+      });
+  }
+  
+  fabric.Object.prototype.controls.deleteControl = new fabric.Control({
+    x: 0.5,
+    y: -0.5,
+    offsetY: 16,
+    cursorStyle: 'pointer',
+    mouseUpHandler: deleteObject,
+    render: renderIcon,
+    cornerSize: 24
+  });
+
+  function deleteObject(eventData, transform) {
+    var target = transform.target;
+    var canvas = target.canvas;
+    canvas.remove(target);
+    canvas.requestRenderAll();
+  }
+  
+  function renderIcon(ctx, left, top, styleOverride, fabricObject) {
+    var size = this.cornerSize;
+    ctx.save();
+    ctx.translate(left, top);
+    ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
+    ctx.drawImage(img, -size/2, -size/2, size, size);
+    ctx.restore();
+  }
+
+  function saveDesign(){
+    var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"); 
+    $.ajax({
+      type: "POST",
+      url: "/saveDesign/",
+      data: {
+        product: pro_id,
+        design:image,
+        csrfmiddlewaretoken: '{{ csrf_token }}',
+      },
+      success: function (response) {
+        console.log(response)
+      }
+    });
+  }
+</script>
+<script>
+  $(function () {
+    
+    let product_url = base_url + $('#product').val()
+    updateProduct(product_url)
+    $('#product').on('change',function(){
+      product_url = base_url + this.value
+      console.log(product_url)
+      updateProduct(product_url)
+    });
+  });  
+</script>
+{% endblock javascripts %}
+

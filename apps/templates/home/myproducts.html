@@ -1,0 +1,38 @@
+{% extends 'layouts/base.html' %}
+
+
+{% block stylesheets %}
+    <style>
+        .design-head{
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+    </style>
+{% endblock stylesheets %}
+    
+
+{% block content %}
+    <div class="container">
+        <h3 class="design-head">Your Designs</h3>
+        <div class="row">
+            {% for item in product %}
+            <div class="col-lg-3 col-md-6 col-sl-12">
+              <a href="{% url 'product' item.id %}">
+                <div class="card card2" style="width: 18rem;">
+                  <img src="{{item.image.url}}" class="card-img-top" alt="...">
+                  <div class="card-body">
+                    <h5 class="card-title">{{item.name}}</h5>
+                    <h5>Price: {{item.price}}</h5>
+                  </div>
+                </div>
+              </a>
+            </div>
+            {% empty %}
+            <div class="alert alert-warning text-center" role="alert">
+              <h4 class="alert-heading">No Designs found!</h4>
+            </div>
+            {% endfor %}
+          </div>
+    </div>
+{% endblock content %}
+    

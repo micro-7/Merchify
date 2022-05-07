@@ -1,0 +1,45 @@
+{% extends 'layouts/base.html' %}
+
+
+{% block stylesheets %}
+    <style>
+        .all-head{
+            padding-top: 30px;
+            padding-bottom: 30px;
+        }
+        a{
+            text-decoration: none;
+            color: black;
+        }
+        a:hover{
+            color: black;
+        }
+    </style>
+{% endblock stylesheets %}
+    
+
+{% block content %}
+<div class="container">
+    <h3 class="all-head">All Products</h3>
+    <div class="row">
+      {% for item in allproduct %}
+      <div class="col-lg-3 col-md-6 col-sl-12">
+        <a href="{% url 'product' item.id %}">
+          <div class="card card2" style="width: 18rem;">
+            <img src="{{item.image.url}}" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">{{item.name}}</h5>
+              <h5>Price: {{item.price}}</h5>
+            </div>
+          </div>
+        </a>
+      </div>
+      {% empty %}
+      <div class="alert alert-warning text-center" role="alert">
+        <h4 class="alert-heading">No Products found!</h4>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock content %}
+    

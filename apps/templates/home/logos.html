@@ -1,0 +1,37 @@
+{% extends 'layouts/base.html' %}
+
+
+{% block stylesheets %}
+    <style>
+        .logo-head{
+            padding-top: 30px;
+            padding-bottom: 20px;
+        }
+    </style>
+{% endblock stylesheets %}
+    
+
+
+{% block content %}
+<div class="container-fluid">
+    <h2 class="logo-head">Your Logos</h2>
+    <div class="row">
+      
+      {% for item in logo %}
+      <div class="col-lg-3 col-md-6 col-sl-12">
+        <a href="#">
+          <div class="card card2" style="width: 18rem;">
+            <img src="{{item.image.url}}" class="card-img-top" alt="...">
+          </div>
+        </a>
+      </div>
+      {% empty %}
+      <div class="alert alert-warning text-center" role="alert">
+        <h4 class="alert-heading">No logo found!</h4>
+      </div>
+      {% endfor %}
+        
+    </div>
+  </div>
+{% endblock content %}
+    

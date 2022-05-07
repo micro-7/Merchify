@@ -1,0 +1,70 @@
+{% load static %}
+<style>
+  .navbar{
+    height: 80px;
+  }
+  .bg-custom{
+    background-color: rgba(174, 212, 212, 1);
+    background-image: linear-gradient(rgb(255, 255, 255),rgb(174, 212, 201));
+  }
+  .btn-drop{
+    margin-right: 50px;
+  }
+</style>
+<nav class="navbar navbar-expand-lg navbar-light bg-custom">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+      <img src="{% static '\assets\images\brand.png' %}"  alt="logo" style="width: 6%;" >
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{% url 'landing' %}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{% url 'allproducts' %}">All Products</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{% url 'branding' %}">Start Creating</a>
+        </li>
+        
+        {% if user.is_superuser %}
+        
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/admin">Admin</a>
+        </li>
+        {% endif %}
+        
+      </ul>
+      
+      <form class="d-flex" action="#" autocomplete="off" >
+        <input class="form-control custom-font rounded-0" type="search" 
+        placeholder="Search" aria-label="Search" name="query">
+        <button class="btn btn-light rounded-0" type="submit"> <i class="fa fa-search" aria-hidden="true"></i> </button>
+      </form>
+      {% if user.is_authenticated %}
+      <div class="dropdown btn-drop">
+        <a class="btn  dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+          {{user.username}}
+        </a>
+        
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <li><a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard</a></li>
+          <li><a class="dropdown-item" href="{% url 'feedback' %}">Feedback</a></li>
+          <li><a class="dropdown-item" href="{% url 'branding' %}">Start Creating</a></li>
+          <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+        </ul>
+      </div>
+      {% else %}
+      <div class="float-none float-sm-right d-block mt-1 mt-sm-0">
+        <a href="{% url 'login' %}"><button class="btn btn-sm btn-outline-success">Login</button></a>
+      </div>
+      <div class="float-none float-sm-right d-block mt-1 mt-sm-0">
+        <a href="{% url 'register' %}"><button class="btn btn-sm btn-outline-success">Register</button></a>
+      </div>
+      {% endif %}
+      
+    </div>
+  </div>
+</nav>

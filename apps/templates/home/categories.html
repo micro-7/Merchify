@@ -1,0 +1,49 @@
+{% extends 'layouts/base.html' %}
+
+
+{% block stylesheets %}
+<style>
+    .category-head {
+        padding-top: 30px;
+        padding-bottom: 20px;
+    }
+
+    a {
+        text-decoration: none;
+        color: rgb(0, 0, 0);
+    }
+
+    a:hover {
+        color: rgb(0, 0, 0);
+    }
+</style>
+{% endblock stylesheets %}
+
+
+{% block content %}
+<div class="container">
+    <h2 class="category-head">All Categories</h2>
+    <div class="row">
+
+        {% for item in categories %}
+
+        <div class="col-lg-3">
+
+            <div class="card">
+                <img src="{{item.logo.url}}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">{{item.name}}</h5>
+                    <a href="{% url 'product_by_category' item.id %}" class="btn btn-primary">Browse All Products</a>
+                </div>
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        {% endfor %}
+
+
+    </div>
+</div>
+{% endblock content %}
