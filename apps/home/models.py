@@ -91,7 +91,7 @@ class Logo(models.Model):
 class Custom_Design(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     design_image = models.ImageField(upload_to="design")
-    product = models.ForeignKey(Product,on_delete=models.DO_NOTHING)
+    product = models.ForeignKey(PlainProduct,on_delete=models.DO_NOTHING)
     created_on = models.DateTimeField(auto_now=True)
     class Meta:
         verbose_name = 'Custom_Design'
@@ -99,7 +99,7 @@ class Custom_Design(models.Model):
 
     def __str__(self):
         """Unicode representation of Custom_Design."""
-        return self.user
+        return self.product.name
 
 class Order(models.Model):
     user =models.ForeignKey(User,on_delete=models.CASCADE)

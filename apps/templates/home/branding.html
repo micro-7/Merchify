@@ -162,6 +162,14 @@
       },
       success: function (response) {
         console.log(response)
+        swal({
+          title: "Merchify",
+          text: "Your custom design is saved",
+          icon: "success",
+          button: "Continue",
+        }).then((val)=>{
+          window.location.href = "/your/products/";
+        });
       }
     });
   }

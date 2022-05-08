@@ -63,7 +63,7 @@ def landing(request):
     return render(request, "home/landing.html", ctx)
 
 def myproducts(request):
-    product = Product.objects.filter(name=request.user)
+    product = Custom_Design.objects.filter(user=request.user)
     ctx = {'title': "Home",
            'product': product,
            }
@@ -177,17 +177,18 @@ def save_design(request):
     if request.is_ajax and request.method == "POST":
         
         product_id = request.POST['product']
+        prd = get_object_or_404(PlainProduct,pk=int(product_id))
         desing_str = request.POST['design']
         format, imgstr = desing_str.split(';base64,')
         ext = 'png'
         data = ContentFile(base64.b64decode(imgstr))
-        myfile = "profile-"+time.strftime("%Y%m%d-%H%M%S")+"." + ext
+        myfile = f"design/{prd.name}_{time.strftime('%Y%m%d')}." + ext
         print(myfile)
         fs = FileSystemStorage('media')
         filename = fs.save(myfile, data)
         # print(filename)
-        prd = get_object_or_404(PlainProduct,pk=int(product_id))
-        m = Custom_Design(user=request.user,product=prd,design_img=filename)
+        m = Custom_Design(user=request.user,product=prd,design_image=filename)
+        m.save()
     return HttpResponse("done")
 
 @login_required(login_url="/login/")
@@ -214,3 +215,7 @@ def pages(request):
     except:
         html_template = loader.get_template('home/page-500.html')
         return HttpResponse(html_template.render(context, request))
+
+
+# C:\Users\mihir\projects\Merchify\media\design\Black Plain_20220508.png
+# C:\Users\mihir\projects\Merchify\core\media\design\Black Plain_20220508.png
