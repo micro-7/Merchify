@@ -1,6 +1,6 @@
 {% extends 'layouts/base.html' %}
 {% load crispy_forms_tags %}
-
+{% load static %}
 
 {% block stylesheets %}
     <style>
@@ -35,7 +35,7 @@
             <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{form|crispy}}
-                <button class="btn btn-primary">Submit</button>
+                <button class="btn btn-primary" >Submit</button>
             </form>
         </div>
         <div class="col-lg-6">
@@ -57,8 +57,16 @@
               <h4 class="price-head">Price : {{product.price}}</h4>
               <h4 class="ship-head">Shipping : {{product.price}}</h4>
               <h4 class="sub-head">Sub-Total : {{product.price}}</h4>
-              <h4 class="total-head">Order Total : {{product.price}}</h4>
+              <h4 class="total-head famt">Order Total : <span>{{product.price}}</span></h4>
+
+              <button class="btn btn-block btn-danger mb-3" data-productid="{{product.id}}" id="purchasebtn">Place Order</button>
+              
         </div>
     </div>
 </div>
 {% endblock content %}
+
+{% block js_plugins %}
+<script src="https://js.stripe.com/v3/"></script>
+<script src="{% static 'assets/js/main.js' %}"></script>
+{% endblock js_plugins %}

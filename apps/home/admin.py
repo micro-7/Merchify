@@ -47,7 +47,7 @@ class OrderAdmin(admin.ModelAdmin):
 class TransactionAdmin(admin.ModelAdmin):
     '''Admin View for Transaction'''
 
-    list_display = ('user','transaction_id','address','order_detail','is_complete','created_on','is_delivered','amount')
+    list_display = ('user','transaction_id','order_detail','created_on','amount')
     search_fields = ('user','transaction_id',)
 
 @admin.register(Contact)

@@ -124,11 +124,8 @@ class Order(models.Model):
 class Transaction(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     transaction_id = models.CharField(max_length=50)
-    address = models.TextField()
     order_detail = models.TextField()
-    is_complete = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now=True)
-    is_delivered = models.BooleanField(default=False)
     amount = models.FloatField() 
 
     # TODO: Define fields here
@@ -141,7 +138,7 @@ class Transaction(models.Model):
 
     def __str__(self):
         """Unicode representation of Transaction."""
-        return self.user
+        return self.amount
         
 class Contact(models.Model):
     name = models.CharField(max_length=225)
