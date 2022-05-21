@@ -138,7 +138,7 @@ class Transaction(models.Model):
 
     def __str__(self):
         """Unicode representation of Transaction."""
-        return self.amount
+        return f"{self.amount}"
         
 class Contact(models.Model):
     name = models.CharField(max_length=225)

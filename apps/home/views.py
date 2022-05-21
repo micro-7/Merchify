@@ -38,6 +38,24 @@ def stripe_config(request):
         stripe_config = {'publicKey': settings.STRIPE_PUBLISHABLE_KEY}
         return JsonResponse(stripe_config, safe=False)
 
+@csrf_exempt
+def save_checkout(request):
+    for item in request.POST.items():
+        print(f"{item}")
+    name = request.POST.get('name')
+    city = request.POST.get('city')
+    
+    address = request.POST.get('address')
+    state = request.POST.get('state')
+    country = request.POST.get('country')
+    phone = request.POST.get('phone')
+    zipcode = request.POST.get('zipcode')
+    subject = request.POST.get('subject')
+    email = request.POST.get('email')
+    message = request.POST.get('message')
+    c = Contact(name=name,city=city,address=address,state=state,country=country,phone=phone,zipcode=zipcode,subject=subject,email=email,message=message)
+    c.save()
+    return json.dumps({'success':'success'})
 
 @csrf_exempt
 def create_checkout_session(request):
@@ -74,7 +92,51 @@ def create_checkout_session(request):
                 user=request.user,
                 transaction_id=checkout_session['id'],
                 order_detail=item.name+" purchased",
-                amount=item.price,
+                amount=price,
+            )
+            order.save()
+            request.session['orderId'] = order.id
+            return JsonResponse({'sessionId': checkout_session['id']})
+        except Exception as e:
+            print(e)
+            return JsonResponse({'error': str(e)})
+
+@csrf_exempt
+def create_custom_checkout_session(request):
+    if request.method == 'GET':
+        domain_url = "http://127.0.0.1:8000/"
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        price = request.GET.get('price')
+        pid = request.GET.get('pid')
+        item = Custom_Design.objects.filter(id=pid).first()
+        print(f'price {price}, id {pid}')
+        print("price", price, "item", item)
+        price = str(price).replace('.', '0')
+        itemdata = [{
+                    'name': item.product.name+"(custom)",
+                    'quantity': 1,
+                    'currency': 'inr',
+                    'amount': int(price) * 100,
+                    'description': item.product.description,
+                    }]
+
+        try:
+            checkout_session = stripe.checkout.Session.create(
+                # new
+                client_reference_id=request.user.id if request.user.is_authenticated else None,
+                success_url=domain_url + \
+                'success?session_id={CHECKOUT_SESSION_ID}',
+                cancel_url=domain_url + 'cancelled/',
+                payment_method_types=['card'],
+                mode='payment',
+                line_items=itemdata,
+            )
+
+            order = Transaction(
+                user=request.user,
+                transaction_id=checkout_session['id'],
+                order_detail=item.product.name+" purchased",
+                amount=price,
             )
             order.save()
             request.session['orderId'] = order.id
@@ -177,12 +239,36 @@ def checkout(request, id):
     html_template = loader.get_template('home/checkout.html')
     return render(request, 'home/checkout.html', context=context)
 
+@login_required(login_url="/login/")
+def custom_checkout(request, id):
+    context = {'segment': 'checkout'}
+    form = ContactForm()
+    if request.method == 'POST':
+        form = ContactForm(request.POST, request.FILES)
+        if form.is_valid():
+            Contact = form.save(commit=False)
+            Contact.user = request.user
+            Contact.save()
+            messages.success(request, 'Contact successfully posted.')
+        else:
+            messages.error(request, 'Contact could not be posted.')
+    context['form'] = form
+    product = get_object_or_404(Custom_Design, pk=id)
+    context['c'] = product
+    html_template = loader.get_template('home/checkout.html')
+    return render(request, 'home/custom_checkout.html', context=context)
 
 def product(request, id):
     context = {'segment': 'product'}
     product = get_object_or_404(Product, pk=id)
     context['product'] = product
     return render(request, 'home/product.html', context=context)
+
+def custom_product(request, id):
+    context = {'segment': 'custom design'}
+    product = get_object_or_404(Custom_Design, pk=id)
+    context['c'] = product
+    return render(request, 'home/custom_product.html', context=context)
 
 
 @login_required(login_url="/login/")
@@ -246,9 +332,9 @@ def branding(request):
 @login_required(login_url="/login/")
 def transaction(request):
     context = {'segment': 'transaction'}
-
-    html_template = loader.get_template('home/transaction.html')
-    return HttpResponse(html_template.render(context, request))
+    transactions = Transaction.objects.filter(user=request.user).all()
+    context['transactions'] = transactions    
+    return render(request,'home/transaction.html',context)
 
 
 @csrf_exempt
