@@ -26,7 +26,7 @@
                  
                  {% for row in transactions %}
                  <tr>
-                    <th scope="row">{{row.id}}</th>
+                    <th scope="row">{{forloop.counter}}</th>
                     <td>{{row.user}}</td>
                     <td>{{row.transaction_id}}</td>
                     <td>{{row.amount}}</td>
